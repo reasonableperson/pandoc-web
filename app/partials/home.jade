@@ -1,14 +1,23 @@
-extends layout
+extends scripts
 
 block body
-    .pure-g
-        .markdown.pure-u-1-2
+    .pure-g(ng-controller="markdown-compiler")
+        .pure-u-1-2
             .wrapper
-                textarea(syntax)><
-                    | &#35; Markdown view
-                    | This is a paragraph.
-                    | - bullet list item
-
-        .html.pure-u-1-2
+                h2 Markdown 
+                h3 {{ doc.name }}
+                textarea.markdown(ui-codemirror="cmOptions", ng-model="doc.code")
+                form.pure-form
+                    fieldset
+                        span Last saved {{ doc.lastSaved }}
+                        button.pure-button.pure-button-primary(ng-click="save()") Save
+                    fieldset
+                        span Currently editing
+                        select(ng-model="doc", ng-options="d.name for d in documents")
+                    fieldset
+                        input(ng-model="newDoc", type="text", placeholder="New filename...")
+                        button.pure-button.pure-button(ng-click="new()") New
+        .pure-u-1-2
             .wrapper
-                p HTML view
+                h2 Preview
+                .html(ng-bind-html="html")

@@ -1,6 +1,9 @@
 angular.module('pandoc.directives', [])
     .directive 'syntax', ->
+        ###
         return (scope, elem, attrs) ->
-            codeMirror = CodeMirror.fromTextArea elem[0],
+            scope.codeMirror = CodeMirror.fromTextArea elem[0],
                 mode: 'markdown'
-            console.log 'syntax attached to', elem
+                theme: 'solarized'
+            console.log 'codemirror:', scope.codeMirror
+            ### 

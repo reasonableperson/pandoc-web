@@ -1,7 +1,7 @@
 'use strict'
 
 # Declare app level module which depends on filters, and services
-angular.module('pandoc', ['pandoc.filters', 'pandoc.services', 'pandoc.directives', 'pandoc.controllers', 'ui.codemirror'])
+angular.module('pandoc', ['pandoc.controllers', 'ui.codemirror'])
     .config ['$routeProvider', ($routeProvider) ->
         $routeProvider.when '/view1',
             templateUrl: 'partials/home.html',

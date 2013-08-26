@@ -1,2 +1,7 @@
 logs/*
 !.gitkeep
+
+node_modules
+app/css/*.css
+app/js/*.js
+app/partials/*.html

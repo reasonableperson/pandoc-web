@@ -2,6 +2,7 @@
 
 # Declare app level module which depends on filters, and services
 angular.module('pandoc', ['pandoc.controllers', 'ui.codemirror'])
+###
     .config ['$routeProvider', ($routeProvider) ->
         $routeProvider.when '/view1',
             templateUrl: 'partials/home.html',
@@ -12,3 +13,4 @@ angular.module('pandoc', ['pandoc.controllers', 'ui.codemirror'])
         $routeProvider.otherwise
             redirectTo: '/view1'
     ]
+###

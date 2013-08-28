@@ -1,7 +1,11 @@
 @import "skin.css";
-.markdown textarea {
+#markdown textarea {
   width: 100%;
   height: 500px;
+}
+#render #pdf iframe {
+  width: 100%;
+  height: 50em;
 }
 .pure-g .wrapper {
   margin: 1.5em;

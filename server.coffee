@@ -5,22 +5,34 @@ app = express()
 # render stylus to CSS
 app.use(require('stylus').middleware(__dirname + '/static'));
 
-# static files
-app.use express.static(__dirname + '/static')
-
+# render jade to HTML
 app.set 'views', __dirname + '/partials'
 app.engine 'jade', require('jade').__express
 
-# templates
+# static files
+app.use express.static(__dirname + '/static')
 
-# views
-app.get '/', (req, res) ->
-    res.render 'home.jade'
-    
-app.get '/from/markdown/to/html', (req, res, next) ->
-    console.log 'not implemenetd'
+pandoc = require 'pdc' 
+app.use express.bodyParser()
 
 # start app
 PORT = 7793
 app.listen PORT
 console.log 'Express server listening on port ' + PORT + '.'
+
+# routes
+
+app.get '/', (req, res) ->
+    res.render 'edit.jade'
+
+app.post '/render/pdf', (req, res) ->
+    console.log 'REQUEST', req.body
+    ### console.log req.body.markdown
+    opts = []
+    result = ''
+    pandoc req.body.markdown, 'markdown', 'pdf', opts,
+        (err, result) ->
+            if err is null then pdf = result
+    res.return pdf
+    ###       
+    res.send req.body

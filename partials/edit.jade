@@ -1,0 +1,31 @@
+extends scripts
+
+mixin menu(name, items)
+    .pure-menu.pure-menu-open.pure-menu-horizontal
+        .pure-menu-heading= name
+        ul
+            - each item in items
+                li(ng-class="{'pure-menu-selected': location.path()=='/"+item.path+"'}")
+                    a(href='#' + item.path)= item.name
+
+mixin tab(name)
+    div.wrapper(id=name, ng-show="location.path() == '/" + name + "'")
+        block
+
+block body
+    .pure-g(ng-controller="pandoc-web")
+        #code.pure-u-1-2
+            +menu('Code', [{name: 'Markdown', path: 'markdown'}])
+            #markdown.wrapper(ng-controller="markdown")
+                include edit-markdown
+
+        #render.pure-u-1-2
+            +menu('Render', [{
+                name: 'HTML', path: 'html' },{
+                name: 'PDF', path: 'pdf'
+            }])
+            +tab('html')
+                div(ng-controller="html", ng-bind-html="showdown.html()")
+            +tab('pdf')
+                button.pure-button(ng-click="renderPdf()") Render PDF
+                iframe(src="submissions.pdf", ng-controller="pdf")

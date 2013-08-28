@@ -2,3 +2,5 @@ logs/*
 !.gitkeep
 
 node_modules
+
+static/tmp/*

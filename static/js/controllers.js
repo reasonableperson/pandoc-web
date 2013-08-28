@@ -20,15 +20,20 @@
       return console.log('current doc', scope.doc);
     }
   ]).service('showdown', function() {
-    var converter, html;
+    var converter, html, source;
     html = '';
+    source = '';
     converter = new Showdown.converter();
     return {
       convert: function(markdown) {
+        source = markdown;
         return html = converter.makeHtml(markdown);
       },
       html: function() {
         return html;
+      },
+      source: function() {
+        return source;
       }
     };
   }).controller('markdown', [
@@ -59,6 +64,22 @@
     '$scope', 'showdown', function(scope, showdown) {
       return scope.showdown = showdown;
     }
-  ]).controller('pdf', ['$scope', function(scope) {}]);
+  ]).controller('pdf', [
+    '$scope', '$http', 'showdown', function(scope, http, showdown) {
+      console.log('pdf controller');
+      scope.url = 'tmp/a62315ff07c69bdb9e9e58ea6d32a759.pdf';
+      return scope.renderPdf = function() {
+        console.log('rendering...');
+        return http.post('render/pdf', {
+          markdown: showdown.source()
+        }).success(function(data, status, headers, config) {
+          console.log(data);
+          return scope.url = 'tmp/' + data + '.pdf';
+        }).error(function(data, status, headers, config) {
+          return console.log(data);
+        });
+      };
+    }
+  ]);
 
 }).call(this);

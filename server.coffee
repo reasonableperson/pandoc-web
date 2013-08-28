@@ -25,14 +25,21 @@ console.log 'Express server listening on port ' + PORT + '.'
 app.get '/', (req, res) ->
     res.render 'edit.jade'
 
+crypto = require 'crypto'
 app.post '/render/pdf', (req, res) ->
     console.log 'REQUEST', req.body
-    ### console.log req.body.markdown
-    opts = []
-    result = ''
-    pandoc req.body.markdown, 'markdown', 'pdf', opts,
+    md5 = crypto.createHash 'md5'
+    md5.update req.body.markdown
+    hash = md5.digest 'hex'
+    filename =  'static/tmp/' + hash + '.pdf'
+    opts = [
+        '--latex-engine=xelatex',
+        '-o' + filename
+    ]
+    pandoc req.body.markdown, 'markdown', 'latex', opts,
         (err, result) ->
-            if err is null then pdf = result
-    res.return pdf
-    ###       
-    res.send req.body
+            console.log err, result
+            if err is null
+                res.send hash
+            else
+                res.send 500, err

@@ -9,7 +9,7 @@ mixin menu(name, items)
                     a(href='#' + item.path)= item.name
 
 mixin tab(name)
-    div.wrapper(id=name, ng-show="location.path() == '/" + name + "'")
+    div.wrapper(id=name, ng-show="location.path() == '/" + name + "'", ng-controller=name)
         block
 
 block body
@@ -25,7 +25,7 @@ block body
                 name: 'PDF', path: 'pdf'
             }])
             +tab('html')
-                div(ng-controller="html", ng-bind-html="showdown.html()")
+                div(ng-bind-html="showdown.html()")
             +tab('pdf')
                 button.pure-button(ng-click="renderPdf()") Render PDF
-                iframe(src="submissions.pdf", ng-controller="pdf")
+                iframe(ng-src="{{url}}", type="application/pdf")

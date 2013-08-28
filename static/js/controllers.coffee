@@ -27,11 +27,14 @@ angular.module 'pandoc.controllers',
 
 .service 'showdown', ->
     html = ''
+    source = ''
     converter = new Showdown.converter()
     return {
         convert: (markdown) ->
+            source = markdown
             html = converter.makeHtml markdown
         html: -> html
+        source: -> source
     }
 
 .controller('markdown', [
@@ -63,8 +66,16 @@ angular.module 'pandoc.controllers',
     scope.showdown = showdown
 ])
 
-.controller('pdf', ['$scope', (scope) ->
-
-    # console.log 'pdf controller'
-
+.controller('pdf', ['$scope', '$http', 'showdown', (scope, http, showdown) ->
+    console.log 'pdf controller'
+    scope.url = 'tmp/a62315ff07c69bdb9e9e58ea6d32a759.pdf'
+    scope.renderPdf = ->
+        console.log 'rendering...'
+        http.post('render/pdf', {markdown: showdown.source()})
+        .success (data, status, headers, config) ->
+            console.log data
+            scope.url = 'tmp/' + data + '.pdf'
+        .error (data, status, headers, config) ->
+            console.log data
+            
 ])

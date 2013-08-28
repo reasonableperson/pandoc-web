@@ -3,18 +3,12 @@ express = require 'express'
 app = express()
 
 # render stylus to CSS
-stylus = require 'stylus'
-app.use stylus.middleware
-    debug: true
-    src: __dirname + '/app/css'
-    dest: __dirname + '/app/css'
-    compile: (str) ->
-        return stylus(str).set 'compress', true
+app.use(require('stylus').middleware(__dirname + '/static'));
 
 # static files
-app.use express.static(__dirname + '/app')
+app.use express.static(__dirname + '/static')
 
-app.set 'views', __dirname + '/app/partials'
+app.set 'views', __dirname + '/partials'
 app.engine 'jade', require('jade').__express
 
 # templates

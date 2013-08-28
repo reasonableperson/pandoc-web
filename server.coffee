@@ -1,32 +1,27 @@
-express = require('express')
+# initiate app
+express = require 'express'
 app = express()
+
+# render stylus to CSS
+stylus = require 'stylus'
+app.use stylus.middleware
+    debug: true
+    src: __dirname + '/app/css'
+    dest: __dirname + '/app/css'
+    compile: (str) ->
+        return stylus(str).set 'compress', true
 
 # static files
 app.use express.static(__dirname + '/app')
 
-# templates
-jade = require('jade')
-fs = require('fs')
+app.set 'views', __dirname + '/app/partials'
+app.engine 'jade', require('jade').__express
 
-# helper for rendering a standard page
-renderTemplate = (tpl, options) ->
-    # locate template directory
-    filename = __dirname + '/app/partials/' + tpl + '.jade'
-    # compile template function
-    template = jade.compile fs.readFileSync( filename ),
-        filename: filename
-        layout: false
-        pretty: true
-    # execute template and return html
-    template options
+# templates
 
 # views
 app.get '/', (req, res) ->
-    opts =
-        contents: 'abc'
-    html = renderTemplate 'home', {}
-    res.send(html)
-    next()
+    res.render 'home.jade'
     
 app.get '/from/markdown/to/html', (req, res, next) ->
     console.log 'not implemenetd'

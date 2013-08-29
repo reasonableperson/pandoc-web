@@ -1,7 +1,7 @@
 textarea.markdown(ui-codemirror="cmOptions", ng-model="pandoc.markdown")
 form.pure-form
     fieldset
-        // span Last saved {{ doc.lastSaved }}
+        span Last saved {{ pandoc.lastSaved }}
         button.pure-button.pure-button-primary(ng-click="save()") Save
     fieldset
         span Currently editing

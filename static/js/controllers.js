@@ -22,8 +22,7 @@
       pandocument.markdown = doc.markdown;
       pandocument.name = doc.name;
       pandocument.html = pandocument.converter.makeHtml(doc.markdown);
-      console.log('current pandoc', pandocument);
-      return window.pd = pandocument;
+      return console.log('current pandoc', pandocument);
     }
   ]).controller('markdown', [
     '$scope', '$element', 'localStorageService', '$sanitize', '$location', 'pandocument', function(scope, elem, storage, $sanitize, location, pandoc) {
@@ -36,8 +35,8 @@
       };
       scope.cmOptions.onChange();
       scope.save = function() {
-        scope.doc.lastSaved = new Date();
-        return storage.add('documents', scope.documents);
+        pandoc.lastSaved = new Date();
+        return storage.add('documents', [pandoc]);
       };
       return scope["new"] = function() {
         return scope.documents.push({

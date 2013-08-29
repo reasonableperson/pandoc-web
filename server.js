@@ -31,18 +31,26 @@
   crypto = require('crypto');
 
   app.post('/render/pdf', function(req, res) {
-    var filename, hash, md5, opts, templateVariables;
+    var filename, hash, key, md5, opts, templateVariables, val;
     console.log('REQUEST', req.body);
     md5 = crypto.createHash('md5');
     md5.update(req.body.markdown);
     hash = md5.digest('hex');
     filename = 'static/tmp/' + hash + '.pdf';
+    opts = ['--latex-engine', 'xelatex', '--data-dir', 'tex', '--template', 'courtdoc', '-o', filename];
     templateVariables = {
       court: "In The Federal Court of Australia",
+      title: "test",
       "party1-name": "Jarndyce",
       "party2-name": "Jarndyce"
     };
-    opts = ['--latex-engine', 'xelatex', '-o', filename];
+    for (key in templateVariables) {
+      val = templateVariables[key];
+      opts.push('-V');
+      opts.push(key + '=' + val);
+      console.log(key + '+' + val);
+    }
+    console.log('passing opts:', opts);
     return pandoc(req.body.markdown, 'markdown', 'latex', opts, function(err, result) {
       console.log(err, result, hash);
       if (err === null) {

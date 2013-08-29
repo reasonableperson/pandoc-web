@@ -24,7 +24,6 @@ angular.module 'pandoc.controllers',
         pandocument.name = doc.name
         pandocument.html = pandocument.converter.makeHtml doc.markdown
         console.log 'current pandoc', pandocument
-        window.pd = pandocument
 
     ])
 
@@ -41,8 +40,8 @@ angular.module 'pandoc.controllers',
         scope.cmOptions.onChange()
 
         scope.save = ->
-            scope.doc.lastSaved = new Date()
-            storage.add 'documents', scope.documents
+            pandoc.lastSaved = new Date()
+            storage.add 'documents', [pandoc]
 
         scope.new = ->
             scope.documents.push

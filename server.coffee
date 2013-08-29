@@ -32,15 +32,23 @@ app.post '/render/pdf', (req, res) ->
     md5.update req.body.markdown
     hash = md5.digest 'hex'
     filename =  'static/tmp/' + hash + '.pdf'
-    templateVariables =
-        court: "In The Federal Court of Australia"
-        "party1-name": "Jarndyce"
-        "party2-name": "Jarndyce"
     opts = [
         '--latex-engine', 'xelatex',
-        # '--template', 'tex/courtdoc.template.tex',
+        '--data-dir', 'tex',
+        '--template', 'courtdoc',
+        # '-v',
         '-o', filename,
     ]
+    templateVariables =
+        court: "In The Federal Court of Australia"
+        title: "test"
+        "party1-name": "Jarndyce"
+        "party2-name": "Jarndyce"
+    for key, val of templateVariables
+        opts.push '-V'
+        opts.push key + '=' + val
+        console.log key+'+'+val
+    console.log 'passing opts:', opts
     pandoc req.body.markdown, 'markdown', 'latex', opts,
         (err, result) ->
             console.log err, result, hash

@@ -37,13 +37,13 @@ app.post '/render/pdf', (req, res) ->
         "party1-name": "Jarndyce"
         "party2-name": "Jarndyce"
     opts = [
-        '--latex-engine=xelatex',
-        '--template=/home/wheel/splintax/Projects/pandoc-web/tex/courtdoc.template.tex',
-        '-o' + filename,
+        '--latex-engine', 'xelatex',
+        # '--template', 'tex/courtdoc.template.tex',
+        '-o', filename,
     ]
     pandoc req.body.markdown, 'markdown', 'latex', opts,
         (err, result) ->
-            console.log err, result
+            console.log err, result, hash
             if err is null
                 res.send hash
             else

@@ -1,12 +1,12 @@
-textarea.markdown(ui-codemirror="cmOptions", ng-model="doc.markdown")
+textarea.markdown(ui-codemirror="cmOptions", ng-model="pandoc.markdown")
 form.pure-form
     fieldset
-        span Last saved {{ doc.lastSaved }}
+        // span Last saved {{ doc.lastSaved }}
         button.pure-button.pure-button-primary(ng-click="save()") Save
     fieldset
         span Currently editing
-        select(ng-model="doc", ng-options="d.name for d in documents")
+        // select(ng-model="doc", ng-options="d.name for d in documents")
     fieldset
-        input(ng-model="newDoc", type="text", placeholder="New filename...")
+        // input(ng-model="newDoc", type="text", placeholder="New filename...")
         button.pure-button.pure-button(ng-click="new()") New
-h3 {{ doc.name }}
+h3 {{ pandoc.name }}

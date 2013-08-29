@@ -3,10 +3,11 @@ angular.module 'pandoc.controllers',
     ['ui.codemirror', 'LocalStorageModule', 'ngSanitize', 'pandoc.services']
 
 .controller('pandoc-web', [
-    '$scope', '$element', 'localStorageService', '$sanitize', '$location'
-    (scope, elem, storage, $sanitize, location) ->
+    '$scope', 'localStorageService', '$sanitize', '$location', 'pandocument',
+    (scope, storage, $sanitize, location, pandocument) ->
 
         scope.location = location
+        scope.pandoc = pandocument
 
         # pull documents out of local storage
         scope.documents = storage.get 'documents'
@@ -18,29 +19,30 @@ angular.module 'pandoc.controllers',
             console.log scope.documents.length + ' documents found.'
 
         # select current document
-        scope.doc = scope.documents[0]
-        console.log 'current doc', scope.doc
+        doc = scope.documents[0]
+        pandocument.markdown = doc.markdown
+        pandocument.name = doc.name
+        pandocument.html = pandocument.converter.makeHtml doc.markdown
+        console.log 'current pandoc', pandocument
+        window.pd = pandocument
 
     ])
 
 .controller('markdown', [
     '$scope', '$element', 'localStorageService', '$sanitize',
     '$location', 'pandocument',
-    (scope, elem, storage, $sanitize, location, pandocument) ->
+    (scope, elem, storage, $sanitize, location, pandoc) ->
         # codemonitor: highlight markdown and render on change
         scope.cmOptions =
             mode: 'markdown'
             theme: 'solarized'
             onChange: ->
-                pandocument.convert scope.doc.markdown
+                pandoc.html = pandoc.converter.makeHtml pandoc.markdown
         scope.cmOptions.onChange()
 
         scope.save = ->
             scope.doc.lastSaved = new Date()
             storage.add 'documents', scope.documents
-
-        scope.render = ->
-            console.log scope.doc
 
         scope.new = ->
             scope.documents.push
@@ -53,15 +55,12 @@ angular.module 'pandoc.controllers',
 ])
 
 .controller('pdf', ['$scope', '$http', 'pandocument', (scope, http, pandocument) ->
-    console.log 'pdf controller'
-    scope.url = 'tmp/a62315ff07c69bdb9e9e58ea6d32a759.pdf'
     scope.renderPdf = ->
         console.log 'rendering...'
-        http.post('render/pdf', {markdown: pandocument.source()})
+        http.post('render/pdf', {markdown: pandocument.markdown})
         .success (data, status, headers, config) ->
-            console.log data
-            scope.url = 'tmp/' + data + '.pdf'
+            pandocument.pdfUrl = 'tmp/' + data + '.pdf'
+            console.log 'pdfUrl', pandocument.pdfUrl
         .error (data, status, headers, config) ->
             console.log data
-            
 ])

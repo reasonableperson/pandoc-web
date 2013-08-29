@@ -25,7 +25,7 @@ block body
                 name: 'PDF', path: 'pdf'
             }])
             +tab('html')
-                div(ng-bind-html="pandocument.html()")
+                div(ng-bind-html="pandoc.html")
             +tab('pdf')
                 button.pure-button(ng-click="renderPdf()") Render PDF
-                iframe(ng-src="{{url}}", type="application/pdf")
+                iframe(ng-src="{{pandoc.pdfUrl}}", type="application/pdf")

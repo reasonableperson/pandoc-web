@@ -42,9 +42,9 @@
       "party1-name": "Jarndyce",
       "party2-name": "Jarndyce"
     };
-    opts = ['--latex-engine=xelatex', '--template=/home/wheel/splintax/Projects/pandoc-web/tex/courtdoc.template.tex', '-o' + filename];
+    opts = ['--latex-engine', 'xelatex', '-o', filename];
     return pandoc(req.body.markdown, 'markdown', 'latex', opts, function(err, result) {
-      console.log(err, result);
+      console.log(err, result, hash);
       if (err === null) {
         return res.send(hash);
       } else {

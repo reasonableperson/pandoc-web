@@ -1,7 +1,6 @@
 'use strict'
 
-# Declare app level module which depends on filters, and services
-angular.module('pandoc', ['pandoc.controllers', 'ui.codemirror'])
+angular.module('pandoc', ['pandoc.controllers', 'pandoc.services', 'ui.codemirror'])
 ###
     .config ['$routeProvider', ($routeProvider) ->
         $routeProvider.when '/view1',
@@ -14,3 +13,5 @@ angular.module('pandoc', ['pandoc.controllers', 'ui.codemirror'])
             redirectTo: '/view1'
     ]
 ###
+
+window.location.hash = '#/html'

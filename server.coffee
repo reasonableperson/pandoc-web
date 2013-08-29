@@ -32,9 +32,14 @@ app.post '/render/pdf', (req, res) ->
     md5.update req.body.markdown
     hash = md5.digest 'hex'
     filename =  'static/tmp/' + hash + '.pdf'
+    templateVariables =
+        court: "In The Federal Court of Australia"
+        "party1-name": "Jarndyce"
+        "party2-name": "Jarndyce"
     opts = [
         '--latex-engine=xelatex',
-        '-o' + filename
+        '--template=/home/wheel/splintax/Projects/pandoc-web/tex/courtdoc.template.tex',
+        '-o' + filename,
     ]
     pandoc req.body.markdown, 'markdown', 'latex', opts,
         (err, result) ->

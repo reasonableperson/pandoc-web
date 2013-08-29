@@ -31,13 +31,18 @@
   crypto = require('crypto');
 
   app.post('/render/pdf', function(req, res) {
-    var filename, hash, md5, opts;
+    var filename, hash, md5, opts, templateVariables;
     console.log('REQUEST', req.body);
     md5 = crypto.createHash('md5');
     md5.update(req.body.markdown);
     hash = md5.digest('hex');
     filename = 'static/tmp/' + hash + '.pdf';
-    opts = ['--latex-engine=xelatex', '-o' + filename];
+    templateVariables = {
+      court: "In The Federal Court of Australia",
+      "party1-name": "Jarndyce",
+      "party2-name": "Jarndyce"
+    };
+    opts = ['--latex-engine=xelatex', '--template=/home/wheel/splintax/Projects/pandoc-web/tex/courtdoc.template.tex', '-o' + filename];
     return pandoc(req.body.markdown, 'markdown', 'latex', opts, function(err, result) {
       console.log(err, result);
       if (err === null) {

@@ -1,8 +1,6 @@
-# Controllers
-
 angular.module 'pandoc.controllers',
     # dependencies
-    ['ui.codemirror', 'LocalStorageModule', 'ngSanitize']
+    ['ui.codemirror', 'LocalStorageModule', 'ngSanitize', 'pandoc.services']
 
 .controller('pandoc-web', [
     '$scope', '$element', 'localStorageService', '$sanitize', '$location'
@@ -25,28 +23,16 @@ angular.module 'pandoc.controllers',
 
     ])
 
-.service 'showdown', ->
-    html = ''
-    source = ''
-    converter = new Showdown.converter()
-    return {
-        convert: (markdown) ->
-            source = markdown
-            html = converter.makeHtml markdown
-        html: -> html
-        source: -> source
-    }
-
 .controller('markdown', [
     '$scope', '$element', 'localStorageService', '$sanitize',
-    '$location', 'showdown',
-    (scope, elem, storage, $sanitize, location, showdown) ->
+    '$location', 'pandocument',
+    (scope, elem, storage, $sanitize, location, pandocument) ->
         # codemonitor: highlight markdown and render on change
         scope.cmOptions =
             mode: 'markdown'
             theme: 'solarized'
             onChange: ->
-                showdown.convert scope.doc.markdown
+                pandocument.convert scope.doc.markdown
         scope.cmOptions.onChange()
 
         scope.save = ->
@@ -62,16 +48,16 @@ angular.module 'pandoc.controllers',
                 markdown: "Add content to your new document..."
 ])
 
-.controller('html', ['$scope', 'showdown', (scope, showdown) ->
-    scope.showdown = showdown
+.controller('html', ['$scope', 'pandocument', (scope, pandocument) ->
+    scope.pandocument = pandocument
 ])
 
-.controller('pdf', ['$scope', '$http', 'showdown', (scope, http, showdown) ->
+.controller('pdf', ['$scope', '$http', 'pandocument', (scope, http, pandocument) ->
     console.log 'pdf controller'
     scope.url = 'tmp/a62315ff07c69bdb9e9e58ea6d32a759.pdf'
     scope.renderPdf = ->
         console.log 'rendering...'
-        http.post('render/pdf', {markdown: showdown.source()})
+        http.post('render/pdf', {markdown: pandocument.source()})
         .success (data, status, headers, config) ->
             console.log data
             scope.url = 'tmp/' + data + '.pdf'
